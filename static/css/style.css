@@ -18,12 +18,12 @@ body{
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start; /* Move o conteúdo para o topo */
-    padding-top: 30px;          /* DIstancia entre o título e a borda superior */
+    justify-content: center;
     min-height: 100vh;
+    padding: 20px;
 }
 .auth-header{
-    margin-bottom: 120px;         /*Espaço entre o título e o card */
+    margin-bottom: 28px;
     text-align: center;
 }
 .card-title {
@@ -49,28 +49,36 @@ body{
 }
 .auth-card{
     background-color: #0d0d0d;
-    padding: 40px 30px;
+    padding: 34px 30px 28px;
     border-radius: 28px;
-    width: 320px;
+    width: 440px;
+    min-height: 430px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
 }
 .auth-form {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 18px;
     align-items: center;
+    width: 100%;
+    margin-top: 10px;
 }
 .input-pill {
     width: 100%;
-    padding: 12px;
+    padding: 16px 14px;
     border-radius: 25px;
     border: none;
     background-color: #d9d9d9;
     text-align: center;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: bold;
     outline: none;
     color: #000;
+    height: 54px;
 }
 .input-pill::placeholder {
     color: #000;
