@@ -51,7 +51,12 @@ def obter_musicas_aleatorias(limit=12):
 def register_routes(app):
     @app.route('/')
     def index():
-        return redirect(url_for('login'))
+        return render_template('index.html')
+
+    @app.route('/register')
+    @app.route('/signup')
+    def register_redirect():
+        return redirect(url_for('cadastro'))
 
     @app.route('/login', methods=['GET', 'POST'])
     def login():

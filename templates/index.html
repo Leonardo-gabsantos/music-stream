@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MusicStream</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="landing-body">
+    <div class="landing-shell">
+        <header class="landing-hero">
+            <div class="hero-overlay"></div>
+
+            <div class="hero-inner">
+                <nav class="hero-topbar">
+                    <div class="brand-wrap" aria-label="MusicStream logo">
+                        <span class="brand-word">Music</span><span class="brand-accent">Stream</span>
+                    </div>
+
+                    <div class="hero-actions">
+                        <a href="{{ url_for('login') }}" class="nav-link">Entrar</a>
+                        <a href="{{ url_for('cadastro') }}" class="nav-link nav-link-primary">Criar conta</a>
+                        <a href="{{ url_for('cadastro') }}" class="nav-link muted-link">Para artistas</a>
+                    </div>
+                </nav>
+
+                <div class="hero-content">
+                    <p class="eyebrow">Música independente</p>
+                    <h1>DESCUBRIR.<br>SEJA DESCOBERTO/A.</h1>
+                    <p class="hero-subtitle">
+                        Descubra faixas independentes e conecte-se com a comunidade por meio da música no MusicStream.
+                    </p>
+                    <a href="{{ url_for('cadastro') }}" class="cta-primary">Começar</a>
+                </div>
+            </div>
+        </header>
+
+        <section class="landing-discovery">
+            <form class="search-bar" action="{{ url_for('buscar') }}" method="get">
+                <span class="search-icon">⌕</span>
+                <input
+                    type="text"
+                    name="q"
+                    placeholder="Pesquisar artistas, bandas, faixas..."
+                    aria-label="Pesquisar artistas, bandas, faixas"
+                >
+            </form>
+
+            <div class="divider-or"><span>ou</span></div>
+
+            <a href="{{ url_for('cadastro') }}" class="upload-button">envie seu próprio som</a>
+        </section>
+    </div>
+</body>
+</html>
