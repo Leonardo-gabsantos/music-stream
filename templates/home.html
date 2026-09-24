@@ -14,14 +14,48 @@
             <div class="logo">
                 <h2>Music<span class="logo-blue">Stream</span></h2>
             </div>
-            <nav class="nav-menu">
-                <a href="#" class="active">🏠 Início</a>
-                <a href="{{ url_for('buscar') }}" class="nav-item">🔍 Buscar</a>
-                <a href="{{ url_for('biblioteca') }}">📚 Sua Biblioteca</a>
+
+            <nav class="nav-menu" aria-label="Menu principal">
+                <a href="#" class="nav-item active">
+                    <span class="nav-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M3 10.5 12 3l9 7.5"></path>
+                            <path d="M5 9.5V20h14V9.5"></path>
+                            <path d="M9 20v-7h6v7"></path>
+                        </svg>
+                    </span>
+                    <span>Início</span>
+                </a>
+
+                <a href="{{ url_for('buscar') }}" class="nav-item">
+                    <span class="nav-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <circle cx="11" cy="11" r="6.5"></circle>
+                            <path d="M16 16l5 5"></path>
+                        </svg>
+                    </span>
+                    <span>Buscar</span>
+                </a>
+
+                <a href="{{ url_for('biblioteca') }}" class="nav-item">
+                    <span class="nav-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M4 6.5A2.5 2.5 0 0 1 6.5 4H18a2 2 0 0 1 2 2v9.5A2.5 2.5 0 0 1 17.5 18H7a3 3 0 0 1-3-3V6.5Z"></path>
+                            <path d="M8 8h8"></path>
+                            <path d="M8 12h5"></path>
+                            <path d="M8 16h3"></path>
+                        </svg>
+                    </span>
+                    <span>Sua Biblioteca</span>
+                </a>
             </nav>
+
             <div class="user-info">
-                <p>👤 <strong>{{ usuario }}</strong></p>
-                <a href="{{ url_for('login') }}" class="btn-logout">Sair</a>
+                <div class="user-profile">
+                    <div class="user-avatar">{{ usuario[0]|upper }}</div>
+                    <span class="user-name">{{ usuario }}</span>
+                </div>
+                <a href="{{ url_for('logout') }}" class="btn-logout">Sair</a>
             </div>
         </aside>
 
@@ -36,25 +70,27 @@
                 <div class="cards-grid">
                     {% for musica in musicas_home %}
                         <div class="card track-card">
-                            {% if musica.artwork %}
-                                <img src="{{ musica.artwork }}" alt="Capa de {{ musica.title }}" class="card-img-cover" onerror="this.onerror=null; this.replaceWith(Object.assign(document.createElement('div'), {className: 'card-img-placeholder', textContent: '🎵'}));">
-                            {% else %}
-                                <div class="card-img-placeholder">🎵</div>
-                            {% endif %}
+                            <div class="card-artwork">
+                                {% if musica.artwork %}
+                                    <img src="{{ musica.artwork }}" alt="Capa de {{ musica.title }}" class="card-img-cover" onerror="this.onerror=null; this.replaceWith(Object.assign(document.createElement('div'), {className: 'card-img-placeholder', textContent: '🎵'}));">
+                                {% else %}
+                                    <div class="card-img-placeholder">🎵</div>
+                                {% endif %}
 
-                            <div class="track-info-container">
-                                <h3 title="{{ musica.title }}">{{ musica.title }}</h3>
-                                <p title="{{ musica.artist }}">{{ musica.artist }}</p>
+                                <button class="btn-play-stream" type="button" aria-label="Tocar {{ musica.title }}"
+                                    data-track-id="{{ musica.id }}"
+                                    data-url="{{ musica.url }}"
+                                    data-title="{{ musica.title }}"
+                                    data-artist="{{ musica.artist }}"
+                                    data-artwork="{{ musica.artwork }}">
+                                    <span aria-hidden="true">▶</span>
+                                </button>
                             </div>
 
-                            <button class="btn-play-stream"
-                                data-track-id="{{ musica.id }}"
-                                data-url="{{ musica.url }}"
-                                data-title="{{ musica.title }}"
-                                data-artist="{{ musica.artist }}"
-                                data-artwork="{{ musica.artwork }}">
-                                ▶ Tocar
-                            </button>
+                            <div class="track-info-container">
+                                <button class="track-title-play" type="button" title="Tocar {{ musica.title }}">{{ musica.title }}</button>
+                                <p title="{{ musica.artist }}">{{ musica.artist }}</p>
+                            </div>
                         </div>
                     {% endfor %}
                 </div>
@@ -76,14 +112,21 @@
         </div>
 
         <div class="player-controls">
-            <button class="btn-control btn-step">⏮</button>
-            <button class="btn-control btn-play" id="main-play-btn">▶</button>
-            <button class="btn-control btn-step">⏭</button>
-            
-            <!-- Barra de tempo sincronizada com o JS -->
-            <div class="time-container">
+            <div class="player-control-row">
+                <button class="btn-control btn-step" type="button" aria-label="Faixa anterior">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 5 9 12l10 7V5Z"></path><path d="M5 5v14"></path></svg>
+                </button>
+                <button class="btn-control btn-play" id="main-play-btn" type="button" aria-label="Reproduzir">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7V5Z"></path></svg>
+                </button>
+                <button class="btn-control btn-step" type="button" aria-label="Próxima faixa">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 5 10 7-10 7V5Z"></path><path d="M19 5v14"></path></svg>
+                </button>
+            </div>
+
+            <div class="progress-container">
                 <span id="current-time">0:00</span>
-                <input type="range" id="progress-bar" value="0" min="0" max="100">
+                <input type="range" id="progress-bar" value="0" min="0" max="100" step="0.1">
                 <span id="total-duration">0:00</span>
             </div>
         </div>

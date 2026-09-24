@@ -19,6 +19,16 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentIndex = -1;
     let currentTrack = null;
 
+    const playIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7V5Z"></path></svg>';
+    const pauseIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="5" width="3.5" height="14" rx="1"></rect><rect x="13.5" y="5" width="3.5" height="14" rx="1"></rect></svg>';
+
+    function setPlayButtonState(isPlaying) {
+        if (!mainPlayBtn) return;
+
+        mainPlayBtn.innerHTML = isPlaying ? pauseIcon : playIcon;
+        mainPlayBtn.setAttribute('aria-label', isPlaying ? 'Pausar' : 'Reproduzir');
+    }
+
     // Função para formatar segundos em mm:ss
     function formatTime(seconds) {
         if (isNaN(seconds)) return "0:00";
@@ -44,6 +54,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    document.querySelectorAll('.track-title-play, .card-artwork').forEach((trigger) => {
+        trigger.addEventListener('click', (event) => {
+            if (event.target.closest('.btn-play-stream')) return;
+
+            const playButton = trigger.closest('.track-card')?.querySelector('.btn-play-stream');
+            playButton?.click();
+        });
+    });
+
     function playTrack(index) {
         if (index < 0 || index >= playlist.length) return;
 
@@ -57,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (playerTitle) playerTitle.textContent = track.title;
             if (playerArtist) playerArtist.textContent = track.artist;
-            if (mainPlayBtn) mainPlayBtn.textContent = '⏸';
+            setPlayButtonState(true);
             updateLikeState(track.id);
         }
     }
@@ -65,7 +84,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (audioPlayer) {
         audioPlayer.addEventListener('play', () => {
             if (playerFooter) playerFooter.classList.remove('hidden');
+            setPlayButtonState(true);
         });
+
+        audioPlayer.addEventListener('pause', () => setPlayButtonState(false));
     }
 
     // Atualiza a barra de progresso e tempos durante a reprodução
@@ -134,10 +156,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (audioPlayer.paused) {
                 audioPlayer.play();
-                mainPlayBtn.textContent = '⏸';
             } else {
                 audioPlayer.pause();
-                mainPlayBtn.textContent = '▶';
             }
         });
     }
