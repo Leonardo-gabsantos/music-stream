@@ -194,13 +194,48 @@ body{
     padding: 40px;
     overflow-y: auto;
     background: linear-gradient(180deg, #222222 0%, #121212 300px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.header {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+.section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    text-align: left;
+    gap: 18px;
+}
+
+.music-section {
+    width: 100%;
+}
+
+.section-title {
+    margin: 0;
+    font-size: clamp(1.4rem, 2vw, 2rem);
+    color: #ffffff;
 }
 
 .cards-grid {
+    width: 100%;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 20px;
-    margin-top: 20px;
+    margin-top: 0;
 }
 
 .card {
@@ -449,13 +484,21 @@ body{
 .library-subtitle {
     color: #a7a7a7;
     margin-top: 8px;
+    text-align: center;
 }
 
 .empty-library {
+    width: 100%;
     max-width: 520px;
-    padding: 70px 20px;
+    min-height: 50vh;
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     text-align: center;
     color: #b3b3b3;
+    margin: 0 auto;
 }
 
 .empty-library-icon {
@@ -468,15 +511,18 @@ body{
 .empty-library h2 {
     color: #ffffff;
     margin-bottom: 10px;
+    text-align: center;
 }
 
 .empty-library p {
     margin-bottom: 24px;
+    text-align: center;
 }
 
 .empty-library .btn-search {
     display: inline-block;
     text-decoration: none;
+    text-align: center;
 }
 
 /* Estilos do Botão de Curtir */

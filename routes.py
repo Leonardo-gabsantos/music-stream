@@ -8,44 +8,44 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from models import Curtida, Usuario, db
 
 
-def obter_musicas_aleatorias(limit=3):
+def obter_musicas_aleatorias(limit=12):
     termos = ['rock', 'pop', 'jazz', 'lofi', 'electronic', 'hip hop', 'indie', 'soul', 'house', 'ambient']
     resultados = []
+    ids_vistos = set()
 
-    for _ in range(4):
+    for _ in range(8):
         termo = random.choice(termos)
         url = f'https://discoveryprovider.audius.co/v1/tracks/search?query={termo}&app_name=MUSICSTREAM'
 
         try:
-            resposta = requests.get(url, timeout=5)
+            resposta = requests.get(url, timeout=8)
             if resposta.status_code != 200:
                 continue
 
             dados = resposta.json().get('data', [])
             for musica in dados:
-                if not musica.get('id') or not musica.get('title'):
+                musica_id = musica.get('id')
+                if not musica_id or musica_id in ids_vistos or not musica.get('title'):
                     continue
 
+                ids_vistos.add(musica_id)
                 user = musica.get('user') or {}
                 artwork = musica.get('artwork') or {}
 
                 resultados.append({
-                    'id': musica.get('id'),
+                    'id': musica_id,
                     'title': musica.get('title'),
                     'artist': (user.get('name') or 'Artista desconhecido'),
                     'artwork': artwork.get('150x150') or '',
-                    'url': f"https://discoveryprovider.audius.co/v1/tracks/{musica.get('id')}/stream?app_name=MUSICSTREAM"
+                    'url': f"https://discoveryprovider.audius.co/v1/tracks/{musica_id}/stream?app_name=MUSICSTREAM"
                 })
 
-            if len(resultados) >= limit:
-                break
+                if len(resultados) >= limit:
+                    return resultados
         except Exception as e:
             print(f'Erro ao carregar músicas aleatórias da Audius: {e}')
 
-    if len(resultados) <= limit:
-        return resultados
-
-    return random.sample(resultados, limit)
+    return resultados[:limit]
 
 
 def register_routes(app):
@@ -64,7 +64,7 @@ def register_routes(app):
             if usuario and check_password_hash(usuario.senha_hash, senha):
                 session.clear()
                 login_user(usuario)
-                session['musicas_home'] = obter_musicas_aleatorias()
+                session['musicas_home'] = obter_musicas_aleatorias(limit=12)
                 return redirect(url_for('home'))
             else:
                 flash('E-mail ou senha incorretos.')
@@ -103,7 +103,7 @@ def register_routes(app):
     @app.route('/home')
     @login_required
     def home():
-        musicas_home = session.get('musicas_home') or obter_musicas_aleatorias()
+        musicas_home = session.get('musicas_home') or obter_musicas_aleatorias(limit=12)
         session['musicas_home'] = musicas_home
         return render_template('home.html', usuario=current_user.nome, musicas_home=musicas_home)
 
