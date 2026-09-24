@@ -6,19 +6,18 @@
     <title>MusicStream - Login</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body>
-
-    <div class="auth-container">  
-        <div class="auth-header">
-            <h1>Music<span class="logo-blue">Stream</span> <span class="subtitle">- Seu streaming de músicas</span></h1>
-        </div>
-        
+<body class="auth-page-body">
+    <div class="auth-container">
         <div class="auth-card">
-            <h2 class="card-title">Login</h2>
-            
+            <div class="auth-brand" aria-label="MusicStream logo">
+                <span class="brand-word">Music</span><span class="brand-accent">Stream</span>
+            </div>
+
+            <h2 class="card-title">Entrar</h2>
+
             {% with mensagens = get_flashed_messages() %}
                 {% if mensagens %}
-                    <div class="alert-error" style="color: #ff4d4d; margin-bottom: 15px; font-weight: bold; text-align: center;">
+                    <div class="alert-error">
                         {% for mensagem in mensagens %}
                             <div>{{ mensagem }}</div>
                         {% endfor %}
@@ -27,23 +26,54 @@
             {% endwith %}
 
             {% if erro %}
-                <div class="alert-error" style="color: #ff4d4d; margin-bottom: 15px; font-weight: bold; text-align: center;">
+                <div class="alert-error">
                     {{ erro }}
                 </div>
             {% endif %}
 
             <form action="{{ url_for('login') }}" method="POST" class="auth-form">
-                <input type="email" name="email" placeholder="Digite seu email" class="input-pill" required>
-                <input type="password" name="senha" placeholder="Digite sua senha" class="input-pill" required>
-                
+                <div class="form-field">
+                    <label for="email">E-mail</label>
+                    <input id="email" type="email" name="email" placeholder="Digite seu e-mail" class="input-pill" required>
+                </div>
+
+                <div class="form-field">
+                    <label for="senha">Senha</label>
+                    <div class="input-wrap">
+                        <input id="senha" type="password" name="senha" placeholder="Digite sua senha" class="input-pill" required>
+                        <button type="button" class="password-toggle" aria-label="Mostrar ou ocultar senha">Mostrar</button>
+                    </div>
+                    <div class="link-row">
+                        <a href="#" class="helper-link">Esqueceu sua senha?</a>
+                    </div>
+                </div>
+
                 <button type="submit" class="btn_submit">Entrar</button>
             </form>
 
+            <div class="divider"><span>ou continue com</span></div>
+
+            <div class="social-login">
+                <button type="button" class="social-btn">Entrar com Google</button>
+            </div>
+
             <div class="auth-footer">
-                <p>Ainda não possui conta? <a href="{{ url_for('cadastro') }}">Criar</a></p>
+                <p>Ainda não tem conta? <a href="{{ url_for('cadastro') }}">Cadastre-se</a></p>
             </div>
         </div>
     </div>
 
+    <script>
+        const toggleButton = document.querySelector('.password-toggle');
+        const passwordInput = document.getElementById('senha');
+
+        if (toggleButton && passwordInput) {
+            toggleButton.addEventListener('click', () => {
+                const isPassword = passwordInput.type === 'password';
+                passwordInput.type = isPassword ? 'text' : 'password';
+                toggleButton.textContent = isPassword ? 'Ocultar' : 'Mostrar';
+            });
+        }
+    </script>
 </body>
 </html>
